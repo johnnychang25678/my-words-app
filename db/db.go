@@ -29,3 +29,44 @@ func ConnectToDB() (*sql.DB, error) {
 
 	return db, nil
 }
+
+func createTable(sql ...string) error {
+	for _, s := range sql {
+		statement, err := db.Prepare(s)
+		if err != nil {
+			return err
+		}
+		_, err = statement.Exec()
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func CreateAppTables() error {
+	words := `
+	 	CREATE TABLE IF NOT EXISTS words (
+	 		word VARCHAR(100) UNIQUE NOT NULL CHECK (word <> ''),
+	 		definition TEXT NOT NULL CHECK (definition <> '')
+	 	);
+	 `
+
+	tests := `
+		CREATE TABLE IF NOT EXISTS tests (
+			date DATETIME DEFAULT CURRENT_TIMESTAMP,
+			correct_count INTEGER NOT NULL,
+			incorrect_count INTEGER NOT NULL
+		);
+	`
+	testWord := `
+		CREATE TABLE IF NOT EXISTS test_word (
+			test_id INTEGER NOT NULL, 
+			word VARCHAR(100) NOT NULL,
+			is_correct TINYINT NOT NULL,
+			definition TEXT NOT NULL,
+			user_selection TEXT NOT NULL
+		);
+	`
+	return createTable(words, tests, testWord)
+}
