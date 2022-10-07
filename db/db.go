@@ -48,7 +48,8 @@ func CreateAppTables() error {
 	words := `
 	 	CREATE TABLE IF NOT EXISTS words (
 	 		word VARCHAR(100) UNIQUE NOT NULL CHECK (word <> ''),
-	 		definition TEXT NOT NULL CHECK (definition <> '')
+	 		definition TEXT NOT NULL CHECK (definition <> ''),
+			create_time DATETIME DEFAULT CURRENT_TIMESTAMP
 	 	);
 	 `
 

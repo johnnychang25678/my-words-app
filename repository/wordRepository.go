@@ -3,6 +3,8 @@ package repository
 import (
 	"database/sql"
 	"fmt"
+
+	"github.com/johnnychang25678/my-words-app/common"
 )
 
 type wordRepository struct {
@@ -18,6 +20,7 @@ func InitWordRepo(db *sql.DB) {
 type Word struct {
 	Word       string
 	Definition string
+	CreateTime string
 }
 
 func (w wordRepository) Upsert(word, definition string) error {
@@ -65,16 +68,28 @@ func (w wordRepository) BulkUpsert(words []Word) error {
 }
 
 func (w wordRepository) SelectAll() ([]Word, error) {
-	row, err := w.db.Query("SELECT word, definition FROM wordss")
+	return w.query("SELECT word, definition, create_time FROM words ORDER BY rowid DESC")
+}
+
+func (w wordRepository) SelectWithLimit(limit int) ([]Word, error) {
+	return w.query(fmt.Sprintf("SELECT word, definition, create_time FROM words ORDER BY rowid DESC LIMIT %d", limit))
+}
+
+func (w wordRepository) SelectByWord(word string) ([]Word, error) {
+	return w.query(fmt.Sprintf("SELECT word, definition, create_time FROM words where word = '%s'", word))
+}
+
+func (w wordRepository) query(sql string) ([]Word, error) {
+	row, err := w.db.Query(sql)
 	if err != nil {
 		return nil, err
 	}
 	defer row.Close()
 	var output []Word
 	for row.Next() {
-		var word, def string
-		row.Scan(&word, &def)
-		output = append(output, Word{Word: word, Definition: def})
+		var word, def, t string
+		row.Scan(&word, &def, &t)
+		output = append(output, Word{Word: word, Definition: def, CreateTime: common.ToLocalTimeString(t)})
 	}
 	return output, nil
 }

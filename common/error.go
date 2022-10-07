@@ -11,6 +11,7 @@ const (
 	OpenFileError ErrorCode = "OPEN_FILE_ERROR"
 	ReadCsvError  ErrorCode = "READ_CSV_ERROR"
 	DbError       ErrorCode = "DB_ERROR"
+	SelectError   ErrorCode = "SELECT_ERROR"
 )
 
 type AppError struct {
