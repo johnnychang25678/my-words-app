@@ -12,6 +12,7 @@ const (
 	ReadCsvError  ErrorCode = "READ_CSV_ERROR"
 	DbError       ErrorCode = "DB_ERROR"
 	SelectError   ErrorCode = "SELECT_ERROR"
+	QuizError     ErrorCode = "QUIZ_ERROR"
 )
 
 type AppError struct {

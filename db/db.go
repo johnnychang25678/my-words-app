@@ -60,6 +60,22 @@ func CreateAppTables() error {
 			incorrect_count INTEGER NOT NULL
 		);
 	`
+
+	// questions := `
+	// 	CREATE TABLE IF NOT EXISTS questions (
+	// 		test_id INTEGER NOT NULL,
+	// 		correct_count INTEGER NOT NULL,
+	// 		incorrect_count INTEGER NOT NULL
+	// 	);
+	// `
+	// questionOptions := `
+	// 	CREATE TABLE IF NOT EXISTS question_options (
+	// 		question_id INTEGER NOT NULL,
+	// 		correct_count INTEGER NOT NULL,
+	// 		incorrect_count INTEGER NOT NULL
+	// 	);
+	// `
+
 	testWord := `
 		CREATE TABLE IF NOT EXISTS test_word (
 			test_id INTEGER NOT NULL, 

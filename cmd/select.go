@@ -39,7 +39,7 @@ to quickly create a Cobra application.`,
 			selectedWords, err = repository.WordRepo.SelectByWord(args[0])
 		}
 		if err != nil {
-			appErr := common.AppError{ErrorCode: common.SelectError, Err: err}
+			appErr := common.AppError{ErrorCode: common.DbError, Err: err}
 			appErr.PrintAppError()
 			return
 		}

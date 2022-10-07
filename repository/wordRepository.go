@@ -79,6 +79,19 @@ func (w wordRepository) SelectByWord(word string) ([]Word, error) {
 	return w.query(fmt.Sprintf("SELECT word, definition, create_time FROM words where word = '%s'", word))
 }
 
+func (w wordRepository) RandomSelectWords(limit int) ([]Word, error) {
+	return w.query(fmt.Sprintf("SELECT word, definition, create_time FROM words ORDER BY RANDOM() LIMIT %d", limit))
+}
+
+func (w wordRepository) TotalWordCount() (int, error) {
+	row := w.db.QueryRow("SELECT count(1) from words")
+	var count int
+	if err := row.Scan(&count); err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
 func (w wordRepository) query(sql string) ([]Word, error) {
 	row, err := w.db.Query(sql)
 	if err != nil {
