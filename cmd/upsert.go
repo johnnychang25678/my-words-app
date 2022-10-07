@@ -1,7 +1,3 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
-*/
 package cmd
 
 import (
@@ -31,6 +27,10 @@ Support below two usages:
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
 			fileName, _ := cmd.Flags().GetString("file")
+			if fileName == "" {
+				printUpsertErr("Please -h to see the usage")
+				return
+			}
 			file, err := os.OpenFile(fileName, os.O_RDONLY, 0644)
 			if err != nil {
 				appErr := common.AppError{ErrorCode: common.OpenFileError, Err: err}
@@ -104,5 +104,5 @@ func init() {
 
 	// name: use with 2 dashes: e.g.: --toggle
 	// shorthand: use with only one dash, e.g.: -t
-	upsertCmd.Flags().StringP("file", "f", "", "File")
+	upsertCmd.Flags().StringP("file", "f", "", "pass your csv file name to upsert all the words and definitions at once")
 }
