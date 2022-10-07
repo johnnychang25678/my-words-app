@@ -23,7 +23,7 @@ type Word struct {
 func (w wordRepository) Upsert(word, definition string) error {
 	insert := `
 		INSERT INTO words (word, definition) VALUES (?, ?) 
-			ON CONFLICT(word) DO UPDATE SET word=excluded.word;
+			ON CONFLICT(word) DO UPDATE SET definition = excluded.definition;
 	`
 	statement, err := w.db.Prepare(insert)
 	if err != nil {
@@ -53,12 +53,14 @@ func (w wordRepository) BulkUpsert(words []Word) error {
 		return fmt.Errorf("len must > 0")
 	}
 	sql := w.genBulkUpsertSql(words)
-	fmt.Println(sql)
 	statement, err := w.db.Prepare(sql)
 	if err != nil {
 		return err
 	}
 	_, err = statement.Exec()
+	if err == nil {
+		fmt.Println("Upsert success!")
+	}
 	return err
 }
 

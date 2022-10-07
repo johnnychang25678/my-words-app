@@ -17,7 +17,7 @@ var initCmd = &cobra.Command{
 		if err := db.CreateAppTables(); err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println("My Word App successfully initialized!")
+		fmt.Println("App successfully initialized!")
 	},
 }
 
