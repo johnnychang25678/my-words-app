@@ -16,6 +16,8 @@ const (
 	QuizError       ErrorCode = "QUIZ_ERROR"
 	TranscriptError ErrorCode = "TRANSCRIPT_ERROR"
 	DeleteError     ErrorCode = "DELETE_ERROR"
+	SearchError     ErrorCode = "SEARCH_ERROR"
+	ApiError        ErrorCode = "API_ERROR"
 )
 
 type AppError struct {
