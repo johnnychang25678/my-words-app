@@ -76,11 +76,39 @@ func (w wordRepository) SelectWithLimit(limit int) ([]Word, error) {
 }
 
 func (w wordRepository) SelectByWord(word string) ([]Word, error) {
-	return w.query(fmt.Sprintf("SELECT word, definition, create_time FROM words where word = '%s'", word))
+	return w.query(fmt.Sprintf("SELECT word, definition, create_time FROM words WHERE word = '%s'", word))
 }
 
 func (w wordRepository) RandomSelectWords(limit int) ([]Word, error) {
 	return w.query(fmt.Sprintf("SELECT word, definition, create_time FROM words ORDER BY RANDOM() LIMIT %d", limit))
+}
+
+func (w wordRepository) SelectInWords(wordStrings []string) ([]Word, error) {
+	sql := "SELECT word, definition, create_time FROM words WHERE word IN ("
+	for i, word := range wordStrings {
+		if i == len(wordStrings)-1 {
+			sql += fmt.Sprintf("'%s'", word)
+		} else {
+			sql += fmt.Sprintf("'%s', ", word)
+		}
+	}
+	sql += ");"
+	return w.query(sql)
+}
+
+func (w wordRepository) SelectLastIncorrectWords() ([]Word, error) {
+	row, err := w.db.Query("SELECT word from test_word WHERE test_id = (SELECT rowid FROM tests ORDER BY rowid DESC LIMIT 1) AND is_correct = 0;")
+	if err != nil {
+		return nil, err
+	}
+	defer row.Close()
+	var words []string
+	for row.Next() {
+		var word string
+		row.Scan(&word)
+		words = append(words, word)
+	}
+	return w.SelectInWords(words)
 }
 
 func (w wordRepository) TotalWordCount() (int, error) {
