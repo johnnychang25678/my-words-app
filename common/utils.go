@@ -13,6 +13,7 @@ func ToLocalTimeString(timeString string) string {
 
 func ShuffleSlice[T any](slice []T) {
 	for i := range slice {
+		rand.Seed(time.Now().UnixNano())
 		j := rand.Intn(i + 1)
 		slice[i], slice[j] = slice[j], slice[i]
 	}
