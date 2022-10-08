@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/go-resty/resty/v2"
+	"github.com/johnnychang25678/my-words-app/common"
 )
 
 type DictionaryResponse []struct {
@@ -41,7 +42,7 @@ func NewDictionaryClient() dictionaryClient {
 	}
 }
 
-func (d dictionaryClient) GetDefinitions(word string) ([]string, error) {
+func (d dictionaryClient) GetDefinitions(word string) ([]string, *common.AppError) {
 	var dicRes DictionaryResponse
 	var dicErr DictionaryError
 	resp, err := d.httpClient.R().
@@ -50,13 +51,16 @@ func (d dictionaryClient) GetDefinitions(word string) ([]string, error) {
 		SetError(&dicErr).
 		Get("/{word}")
 	if err != nil {
-		return nil, err
+		return nil, &common.AppError{ErrorCode: common.ApiError, Err: err}
 	}
 	if resp.StatusCode() != 200 {
 		if dicErr.Title != "" {
-			return nil, fmt.Errorf(dicErr.Title)
+			if dicErr.Title == "No Definitions Found" {
+				return nil, &common.AppError{ErrorCode: common.SearchNoDefError, Err: fmt.Errorf(dicErr.Title)}
+			}
+			return nil, &common.AppError{ErrorCode: common.ApiError, Err: fmt.Errorf(dicErr.Title)}
 		}
-		return nil, fmt.Errorf("unknown error")
+		return nil, &common.AppError{ErrorCode: common.UnknownError, Err: fmt.Errorf("unknown error")}
 	}
 
 	var output []string

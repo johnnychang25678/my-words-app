@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/johnnychang25678/my-words-app/client"
 	"github.com/johnnychang25678/my-words-app/common"
@@ -23,11 +24,22 @@ var searchCmd = &cobra.Command{
 		}
 		word := args[0]
 
-		client := client.NewDictionaryClient()
+		dictionaryClient := client.NewDictionaryClient()
 		fmt.Println("fetching data from the internet...")
-		definitions, err := client.GetDefinitions(word)
-		if err != nil {
-			appErr := common.AppError{ErrorCode: common.ApiError, Err: err}
+		definitions, apiErr := dictionaryClient.GetDefinitions(word)
+		if apiErr != nil {
+			if apiErr.ErrorCode == common.SearchNoDefError && os.Getenv("ENABLE_WORD_SUGGESTION") == "true" {
+				// call word suggestion api
+				wordSuggestionClient := client.NewWordSuggestionClient()
+				suggestion, err := wordSuggestionClient.GetWordSuggestion(word)
+				if err != nil {
+					apiErr = err
+				} else if suggestion != "" {
+					fmt.Printf("Did you mean: %s\n", suggestion)
+					return
+				}
+			}
+			appErr := apiErr
 			appErr.PrintAppError()
 			return
 		}
@@ -41,7 +53,7 @@ var searchCmd = &cobra.Command{
 			Label:     "do you want to add or update this word to the database?",
 			IsConfirm: true,
 		}
-		_, err = prompt.Run()
+		_, err := prompt.Run()
 		if err != nil { // if user doesn't respone with y or Y, will return error
 			fmt.Println("ok!")
 			return

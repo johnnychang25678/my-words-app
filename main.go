@@ -7,6 +7,7 @@ import (
 	"github.com/johnnychang25678/my-words-app/cmd"
 	"github.com/johnnychang25678/my-words-app/db"
 	"github.com/johnnychang25678/my-words-app/repository"
+	"github.com/joho/godotenv"
 )
 
 func initRepos(db *sql.DB) {
@@ -16,9 +17,13 @@ func initRepos(db *sql.DB) {
 }
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal(err)
+	}
 	database, err := db.ConnectToDB()
 	if err != nil {
-		log.Fatal(err) // close the app if fail to connect to db
+		log.Fatal(err)
 	}
 	initRepos(database)
 	cmd.Execute()
