@@ -101,7 +101,6 @@ func getWordsFromFile(file *os.File) ([]repository.Word, *common.AppError) {
 
 func init() {
 	rootCmd.AddCommand(upsertCmd)
-
 	// name: use with 2 dashes: e.g.: --toggle
 	// shorthand: use with only one dash, e.g.: -t
 	upsertCmd.Flags().StringP("file", "f", "", "pass your csv file name to upsert all the words and definitions at once")

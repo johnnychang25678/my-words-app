@@ -25,7 +25,6 @@ func ConnectToDB() (*sql.DB, error) {
 		fmt.Println("connect to db error:", err)
 		return nil, err
 	}
-
 	return db, nil
 }
 

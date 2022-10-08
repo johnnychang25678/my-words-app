@@ -7,12 +7,13 @@ import (
 type ErrorCode string
 
 const (
-	UpsertError   ErrorCode = "UPSERT_ERROR"
-	OpenFileError ErrorCode = "OPEN_FILE_ERROR"
-	ReadCsvError  ErrorCode = "READ_CSV_ERROR"
-	DbError       ErrorCode = "DB_ERROR"
-	SelectError   ErrorCode = "SELECT_ERROR"
-	QuizError     ErrorCode = "QUIZ_ERROR"
+	UpsertError     ErrorCode = "UPSERT_ERROR"
+	OpenFileError   ErrorCode = "OPEN_FILE_ERROR"
+	ReadCsvError    ErrorCode = "READ_CSV_ERROR"
+	DbError         ErrorCode = "DB_ERROR"
+	SelectError     ErrorCode = "SELECT_ERROR"
+	QuizError       ErrorCode = "QUIZ_ERROR"
+	TrasncriptError ErrorCode = "TRANSCRIPT_ERROR"
 )
 
 type AppError struct {
