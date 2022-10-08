@@ -24,11 +24,11 @@ type Word struct {
 }
 
 func (w wordRepository) Upsert(word, definition string) error {
-	insert := `
+	sql := `
 		INSERT INTO words (word, definition) VALUES (?, ?) 
 			ON CONFLICT(word) DO UPDATE SET definition = excluded.definition;
 	`
-	statement, err := w.db.Prepare(insert)
+	statement, err := w.db.Prepare(sql)
 	if err != nil {
 		return err
 	}
@@ -118,6 +118,18 @@ func (w wordRepository) TotalWordCount() (int, error) {
 		return 0, err
 	}
 	return count, nil
+}
+
+func (w wordRepository) DeleteByWord(word string) (int64, error) {
+	statement, err := w.db.Prepare("DELETE FROM words WHERE word = ?")
+	if err != nil {
+		return 0, err
+	}
+	res, err := statement.Exec(word)
+	if err != nil {
+		return 0, err
+	}
+	return res.RowsAffected()
 }
 
 func (w wordRepository) query(sql string) ([]Word, error) {

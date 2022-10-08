@@ -1,7 +1,3 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
-*/
 package cmd
 
 import (
@@ -22,7 +18,7 @@ var transcriptCmd = &cobra.Command{
 	Long:  `Show transcript of a quiz taken`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 1 {
-			appErr := common.AppError{ErrorCode: common.TrasncriptError, Err: fmt.Errorf("Too many arguments. Please -h to see usage.")}
+			appErr := common.AppError{ErrorCode: common.TranscriptError, Err: fmt.Errorf("Too many arguments. Please -h to see usage.")}
 			appErr.PrintAppError()
 			return
 		}
@@ -70,7 +66,7 @@ var transcriptCmd = &cobra.Command{
 			// with arg, select result by id
 			id, err := strconv.Atoi(args[0])
 			if err != nil {
-				appErr := common.AppError{ErrorCode: common.TrasncriptError, Err: err}
+				appErr := common.AppError{ErrorCode: common.TranscriptError, Err: err}
 				appErr.PrintAppError()
 				return
 			}

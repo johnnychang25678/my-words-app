@@ -14,7 +14,8 @@ const (
 	DbError         ErrorCode = "DB_ERROR"
 	SelectError     ErrorCode = "SELECT_ERROR"
 	QuizError       ErrorCode = "QUIZ_ERROR"
-	TrasncriptError ErrorCode = "TRANSCRIPT_ERROR"
+	TranscriptError ErrorCode = "TRANSCRIPT_ERROR"
+	DeleteError     ErrorCode = "DELETE_ERROR"
 )
 
 type AppError struct {
