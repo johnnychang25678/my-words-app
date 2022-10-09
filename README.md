@@ -1,11 +1,19 @@
 # My-Words-App
-I build this tool to better manage my English vocabulary study. 
+I build this command-line app to better manage my English vocabulary study.
 
-Tha app is built with `Go`, `sqlite`, and these awesome cli frameworks / packages:
-- [cobra](https://github.com/spf13/cobra)
-- [promptui](https://github.com/manifoldco/promptui)
-- [go-pretty](https://github.com/jedib0t/go-pretty)
+### What is the problem you're solving?
 
+In the past, this was the process when I was trying to memorize vocabularies:
+
+See a word I don't undestand -> google it -> Add the word and its definition to an excel file -> Review and try to quiz myself by hiding the definition column on excel -> Repeat
+
+As you can see, this process is tedious and hard to keep track of my progress. For example, if I want to take a quiz only on the incorrect words from last quiz, it's quite a manual process using Excel. 
+
+The app is a centralized place for me to do word searching, studying and quizzing.
+
+### Why command-line app? Why not mobile or web?
+
+Because I am a nerd and I love cli! I feel like I can better concentrate with cli and just using my keyboard. Plus I've always wanted to build a cli tool with Go - this is the first one I've ever built.
 ## Main features
 - CRUD operations for words and definitions. Support cli input and csv file upload.
 - Search a word's definition through [dictionary api](https://dictionaryapi.dev/).
@@ -35,6 +43,9 @@ Available Commands:
   `upsert`:      Insert or update a word and its definition to the database. Use --file flag to upsert with a csv file.
 
 ## Usage
+You can simply go to [/example](https://github.com/johnnychang25678/my-words-app/tree/main/example) and download the app to start using it! More details in README in example.
+
+Or you can build the project following these steps:
 1. Install [Go](https://go.dev/) (version >= 1.18) if you haven't already
 2. Clone this repository
 3. Add a `.env` file to the root. Refer to `.env.example` 
@@ -46,3 +57,15 @@ Available Commands:
 ``` 
 ./my-words-app --help
 ```
+## Tech stack
+Tha app is built with `Go`, `sqlite`, and these awesome cli frameworks / packages:
+- [cobra](https://github.com/spf13/cobra)
+- [promptui](https://github.com/manifoldco/promptui)
+- [go-pretty](https://github.com/jedib0t/go-pretty)
+
+## Future Improvements
+- Add more colors and styles.
+- Support different languages.
+- Search for synonyms when adding words. Option to add synonyms to database.
+- Search and add the word's example sentences.
+- ... 
