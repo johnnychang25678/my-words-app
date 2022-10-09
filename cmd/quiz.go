@@ -22,9 +22,12 @@ type Question struct {
 
 // quizCmd represents the quiz command
 var quizCmd = &cobra.Command{
-	Use:   "quiz",
-	Short: "A brief description of your command",
-	Long:  `A longer description that spans multiple lines and likely contains examples`,
+	Use:   "quiz [count]",
+	Short: "Take a quiz of [count] words from database. You need minimum 10 words in database to run this command.",
+	Long: `Take a quiz of [count] words from database. 
+- If no [count] arg, default 10 words per quiz.
+- Use --incorrect flag to take a quiz on only the words you got wrong from last quiz.
+- You need minimum 10 words in database to run this command.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// if word < 10 in database, cannot start quiz
 		wordCount, err := repository.WordRepo.TotalWordCount()
@@ -240,6 +243,5 @@ func PrintQuizSummary(results []repository.Result, correctCount int, incorrectCo
 
 func init() {
 	rootCmd.AddCommand(quizCmd)
-	quizCmd.Flags().Bool("incorrect", false, "Quiz incorrect words of last quiz")
-	// selectCmd.Flags().IntP("count", "c", 10, "Quiz for random [int] words in database.")
+	quizCmd.Flags().Bool("incorrect", false, "Quiz incorrect words on last quiz")
 }

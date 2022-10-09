@@ -13,17 +13,11 @@ import (
 
 // upsertCmd represents the upsert command
 var upsertCmd = &cobra.Command{
-	Use:   "upsert",
-	Short: "Insert or update word(s) to the database.",
-	Long: `
-Insert new words, or update existed words' defintion in database.
-You can either upsert one word with terminal or multiple words at once with .csv file.
-* If use --file flag, make sure it's a csv file and the first column is word, second column is definition
-
-Support below two usages: 
-- upsert [word] [definition]
-- upsert --file filename`,
-
+	Use:   "upsert {word definition}",
+	Short: "Insert or update a word and its definition to the database. Use --file flag to upsert with a csv file.",
+	Long: `Insert or update a word and its definition to the database.
+- Either upsert one word with terminal or multiple words at once with --file filename.
+- With --file, make sure the file exists, it's a csv file, and the first column is word, second column is definition.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
 			fileName, _ := cmd.Flags().GetString("file")
@@ -101,7 +95,5 @@ func getWordsFromFile(file *os.File) ([]repository.Word, *common.AppError) {
 
 func init() {
 	rootCmd.AddCommand(upsertCmd)
-	// name: use with 2 dashes: e.g.: --toggle
-	// shorthand: use with only one dash, e.g.: -t
-	upsertCmd.Flags().StringP("file", "f", "", "pass your csv file name to upsert all the words and definitions at once")
+	upsertCmd.Flags().StringP("file", "f", "", "pass csv file name as arg to upsert all the words and definitions at once")
 }

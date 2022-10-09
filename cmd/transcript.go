@@ -13,9 +13,11 @@ import (
 
 // transcriptCmd represents the transcript command
 var transcriptCmd = &cobra.Command{
-	Use:   "transcript",
-	Short: "Show transcript of a quiz taken",
-	Long:  `Show transcript of a quiz taken`,
+	Use:   "transcript [quizId]",
+	Short: "Show transcript of [quizId] quiz, if no quizId is provided, will show the latest quiz. Use --history to get the quizId.",
+	Long: `Show transcript of [quizId] quiz
+- If no quizId is provided, will show the latest quiz. 
+- Use --history to get your quiz history, and get the quizIds.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 1 {
 			appErr := common.AppError{ErrorCode: common.TranscriptError, Err: fmt.Errorf("Too many arguments. Please -h to see usage.")}
@@ -91,15 +93,5 @@ var transcriptCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(transcriptCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// transcriptCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// transcriptCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	transcriptCmd.Flags().Bool("history", false, "show all tests record")
 }

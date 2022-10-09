@@ -17,13 +17,11 @@ import (
 // selectCmd represents the select command
 var selectCmd = &cobra.Command{
 	Use:   "select",
-	Short: "print the words and definitions in database",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Print or create a csv file of the words and definitions in database. If no flags are provided, will select latest 10 words.",
+	Long: `Print or create a csv file of the words and definitions in database.
+- If no flags are provided, will select latest 10 words.
+- A prompt will check if you want to output as a csv or print out to terminal.
+- If output to csv, the file will be created under your currect directory.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// if no args, check --all, --incorrect, --count flags
 		var selectedWords []repository.Word
@@ -51,7 +49,7 @@ to quickly create a Cobra application.`,
 		}
 
 		if len(selectedWords) == 0 {
-			fmt.Println("You do not have any wors in your database yet")
+			fmt.Println("You do not have any words in your database yet")
 			return
 		}
 
@@ -104,5 +102,5 @@ func init() {
 	rootCmd.AddCommand(selectCmd)
 	selectCmd.Flags().IntP("count", "c", 10, "Select the latest [int] words in database.")
 	selectCmd.Flags().BoolP("all", "a", false, "Select all the words in database.")
-	selectCmd.Flags().Bool("incorrect", false, "Select all the words you got wrong in last quiz")
+	selectCmd.Flags().Bool("incorrect", false, "Select all the words you got wrong from last quiz.")
 }

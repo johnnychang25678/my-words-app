@@ -12,7 +12,7 @@ import (
 var deleteCmd = &cobra.Command{
 	Use:   "delete word",
 	Short: "Delete a word from database",
-	Long:  "Delete a word from database",
+	Long:  "Delete a word from database. word argument is mandatory",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 || len(args) > 1 {
 			appErr := common.AppError{ErrorCode: common.DeleteError, Err: fmt.Errorf("Please pass in one arg the word you want to delete from database")}
