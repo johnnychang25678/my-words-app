@@ -13,7 +13,6 @@ import (
 func initRepos(db *sql.DB) {
 	repository.InitWordRepo(db)
 	repository.InitTestRepo(db)
-	repository.InitTestWordRepo(db)
 }
 
 func main() {
