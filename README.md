@@ -30,7 +30,7 @@ Available Commands:
   
   `select`:      Print or create a csv file of the words and definitions in database. If no flags are provided, will select latest 10 words.
   
-  transcript  Show transcript of [quizId] quiz, if no quizId is provided, will show the latest quiz. Use --history to get the quizId.
+  `transcript`:  Show transcript of [quizId] quiz, if no quizId is provided, will show the latest quiz. Use --history to get the quizId.
   
   `upsert`:      Insert or update a word and its definition to the database. Use --file flag to upsert with a csv file.
 
@@ -39,7 +39,7 @@ Available Commands:
 2. Clone this repository
 3. Add a `.env` file to the root. Refer to `.env.example` 
 
-    The app uses [this](https://apilayer.com/marketplace/dymt-api) api to provide word suggestion of there's a spelling misktake when using `search` command. You can either get your own api key, or disable it by setting `ENABLE_WORD_SUGGESTION=false` in `.env`
+    The app uses [this](https://apilayer.com/marketplace/dymt-api) api to provide word suggestion if there's a spelling misktake when using `search` command. You can either get your own api key, or disable it by setting `ENABLE_WORD_SUGGESTION=false` in `.env`
     
 4. Run `go build`
 5. `--help` to see the help 
