@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"regexp"
 
 	"github.com/johnnychang25678/my-words-app/client"
 	"github.com/johnnychang25678/my-words-app/common"
@@ -14,8 +15,8 @@ import (
 // searchCmd represents the search command
 var searchCmd = &cobra.Command{
 	Use:   "search word",
-	Short: "Search word definition from api",
-	Long:  `Search word definition from api`,
+	Short: "Search word definition from the dictionary api. After search, you can add the word to the database.",
+	Long:  `Search word definition from the dictionary api. After search, you can add the word to the database.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 || len(args) > 1 {
 			appErr := common.AppError{ErrorCode: common.SearchError, Err: fmt.Errorf("Please provide exactly one argument")}
@@ -23,9 +24,15 @@ var searchCmd = &cobra.Command{
 			return
 		}
 		word := args[0]
+		isLetter := regexp.MustCompile(`^[a-zA-Z]+$`).MatchString
+		if !isLetter(word) {
+			appErr := common.AppError{ErrorCode: common.InvalidInputError, Err: fmt.Errorf("Your input conatains invalid character. Only accept alphabets")}
+			appErr.PrintAppError()
+			return
+		}
 
 		dictionaryClient := client.NewDictionaryClient()
-		fmt.Println("fetching data from the internet...")
+		fmt.Println("fetching data from the dictionary api...")
 		definitions, apiErr := dictionaryClient.GetDefinitions(word)
 		if apiErr != nil {
 			if apiErr.ErrorCode == common.SearchNoDefError && os.Getenv("ENABLE_WORD_SUGGESTION") == "true" {
