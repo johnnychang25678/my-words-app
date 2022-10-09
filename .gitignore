@@ -1,4 +1,4 @@
 sqlite-database.db
 .env
-*.csv
+output-*.csv
 *.sql
