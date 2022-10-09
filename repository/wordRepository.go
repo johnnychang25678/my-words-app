@@ -39,12 +39,11 @@ func (w wordRepository) Upsert(word, definition string) error {
 	return err
 }
 
-func (w wordRepository) genBulkUpsertSql(words []Word) string {
-	tuples := fmt.Sprintf("('%s', '%s')", words[0].Word, words[0].Definition)
-
-	if len(words) > 1 {
-		for i := 1; i < len(words); i++ {
-			tuples += fmt.Sprintf(", ('%s', '%s')", words[i].Word, words[i].Definition)
+func (w wordRepository) genBulkUpsertSql(wordsLength int) string {
+	tuples := "(?, ?)"
+	if wordsLength > 1 {
+		for i := 1; i < wordsLength; i++ {
+			tuples += ", (?, ?)"
 		}
 	}
 	return "INSERT INTO words (word, definition) VALUES " + tuples +
@@ -55,12 +54,17 @@ func (w wordRepository) BulkUpsert(words []Word) error {
 	if len(words) == 0 {
 		return fmt.Errorf("len must > 0")
 	}
-	sql := w.genBulkUpsertSql(words)
+	sql := w.genBulkUpsertSql(len(words))
 	statement, err := w.db.Prepare(sql)
 	if err != nil {
 		return err
 	}
-	_, err = statement.Exec()
+	// type cast to any
+	var args []any
+	for _, w := range words {
+		args = append(args, w.Word, w.Definition)
+	}
+	_, err = statement.Exec(args...)
 	if err == nil {
 		fmt.Println("Upsert success!")
 	}
@@ -68,47 +72,34 @@ func (w wordRepository) BulkUpsert(words []Word) error {
 }
 
 func (w wordRepository) SelectAll() ([]Word, error) {
-	return w.query("SELECT word, definition, create_time FROM words ORDER BY rowid DESC")
+	return w.queryWord("SELECT word, definition, create_time FROM words ORDER BY rowid DESC")
 }
 
 func (w wordRepository) SelectWithLimit(limit int) ([]Word, error) {
-	return w.query(fmt.Sprintf("SELECT word, definition, create_time FROM words ORDER BY rowid DESC LIMIT %d", limit))
+	return w.queryWord("SELECT word, definition, create_time FROM words ORDER BY rowid DESC LIMIT ?", limit)
 }
 
 func (w wordRepository) SelectByWord(word string) ([]Word, error) {
-	return w.query(fmt.Sprintf("SELECT word, definition, create_time FROM words WHERE word = '%s'", word))
+	return w.queryWord("SELECT word, definition, create_time FROM words WHERE word = '?'", word)
 }
 
 func (w wordRepository) RandomSelectWords(limit int) ([]Word, error) {
-	return w.query(fmt.Sprintf("SELECT word, definition, create_time FROM words ORDER BY RANDOM() LIMIT %d", limit))
-}
-
-func (w wordRepository) SelectInWords(wordStrings []string) ([]Word, error) {
-	sql := "SELECT word, definition, create_time FROM words WHERE word IN ("
-	for i, word := range wordStrings {
-		if i == len(wordStrings)-1 {
-			sql += fmt.Sprintf("'%s'", word)
-		} else {
-			sql += fmt.Sprintf("'%s', ", word)
-		}
-	}
-	sql += ");"
-	return w.query(sql)
+	return w.queryWord("SELECT word, definition, create_time FROM words ORDER BY RANDOM() LIMIT ?", limit)
 }
 
 func (w wordRepository) SelectLastIncorrectWords() ([]Word, error) {
-	row, err := w.db.Query("SELECT word from test_word WHERE test_id = (SELECT rowid FROM tests ORDER BY rowid DESC LIMIT 1) AND is_correct = 0;")
+	row, err := w.db.Query("SELECT word from test_word WHERE test_id = (SELECT rowid FROM tests ORDER BY rowid DESC LIMIT 1) AND is_correct = ?;", 0)
 	if err != nil {
 		return nil, err
 	}
 	defer row.Close()
-	var words []string
+	var words []any
 	for row.Next() {
-		var word string
+		var word any
 		row.Scan(&word)
 		words = append(words, word)
 	}
-	return w.SelectInWords(words)
+	return w.selectInWords(words)
 }
 
 func (w wordRepository) TotalWordCount() (int, error) {
@@ -132,8 +123,22 @@ func (w wordRepository) DeleteByWord(word string) (int64, error) {
 	return res.RowsAffected()
 }
 
-func (w wordRepository) query(sql string) ([]Word, error) {
-	row, err := w.db.Query(sql)
+func (w wordRepository) selectInWords(wordStrings []any) ([]Word, error) {
+	sql := "SELECT word, definition, create_time FROM words WHERE word IN ("
+	for i := range wordStrings {
+		if i == len(wordStrings)-1 {
+			// sql += fmt.Sprintf("'%s'", word)
+			sql += "?"
+		} else {
+			sql += "?, "
+		}
+	}
+	sql += ")"
+	return w.queryWord(sql, wordStrings...)
+}
+
+func (w wordRepository) queryWord(sql string, args ...any) ([]Word, error) {
+	row, err := w.db.Query(sql, args...)
 	if err != nil {
 		return nil, err
 	}

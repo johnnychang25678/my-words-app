@@ -42,18 +42,14 @@ func InitTestRepo(db *sql.DB) {
 	TestRepo = &testRepository{db: db}
 }
 
-// when inserting test, should use a transaction to insert testWord
-// so we don't need testWordRepository.
-
 func (t testRepository) Insert(results []Result, correctCount int, incorrectCount int) error {
 	tx, err := t.db.Begin()
 	if err != nil {
 		return err
 	}
 
-	insertTestSql := fmt.Sprintf("INSERT INTO tests (correct_count, incorrect_count) VALUES (%d, %d);",
-		correctCount, incorrectCount)
-	statement1Result, err := t.handleTransaction(tx, insertTestSql)
+	insertTestSql := "INSERT INTO tests (correct_count, incorrect_count) VALUES (?, ?)"
+	statement1Result, err := t.handleTransaction(tx, insertTestSql, correctCount, incorrectCount)
 
 	lastInsertId, err := statement1Result.LastInsertId()
 	if err != nil {
@@ -134,33 +130,9 @@ func (t testRepository) SelectLatestTest() (*Test, error) {
 	}, err
 }
 
-// func (t testRepository) SelectLatestTestResult() (*Result, error) {
-// 	sql := "SELECT word, is_correct, definition, user_selection FROM test_word WHERE test_id = (SELECT rowid FROM tests ORDER BY rowid DESC LIMIT 1);"
-// 	row := t.db.QueryRow(sql)
-// 	var word string
-// 	var isCorrectInt int
-// 	var def string
-// 	var userSelect string
-// 	err := row.Scan(&word, &isCorrectInt, &def, &userSelect)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	var isCorrect bool
-// 	if isCorrectInt == 1 {
-// 		isCorrect = true
-// 	}
-// 	return &Result{
-// 		Word:          word,
-// 		IsCorrect:     isCorrect,
-// 		Definition:    def,
-// 		UserSelection: userSelect,
-// 	}, err
-
-// }
-
 func (t testRepository) SelectTestResultById(testId int) ([]Result, error) {
-	sql := fmt.Sprintf("SELECT word, is_correct, definition, user_selection FROM test_word WHERE test_id = %d;", testId)
-	row, err := t.db.Query(sql)
+	sql := "SELECT word, is_correct, definition, user_selection FROM test_word WHERE test_id = ?;"
+	row, err := t.db.Query(sql, testId)
 	if err != nil {
 		return nil, err
 	}
@@ -187,14 +159,14 @@ func (t testRepository) SelectTestResultById(testId int) ([]Result, error) {
 }
 
 // handle rollback
-func (t testRepository) handleTransaction(tx *sql.Tx, statement string) (sql.Result, error) {
+func (t testRepository) handleTransaction(tx *sql.Tx, statement string, args ...any) (sql.Result, error) {
 	s, err := tx.Prepare(statement)
 	defer s.Close()
 	if err != nil {
 		tx.Rollback()
 		return nil, err
 	}
-	res, err := s.Exec()
+	res, err := s.Exec(args...)
 	if err != nil {
 		tx.Rollback()
 		return nil, err
