@@ -5,7 +5,7 @@ I build this command-line app to better manage my English vocabulary study.
 
 In the past, this was the process when I was trying to memorize vocabularies:
 
-See a word I don't undestand -> google it -> Add the word and its definition to an excel file -> Review and try to quiz myself by hiding the definition column on excel -> Repeat
+See a word I don't understand -> google it -> Add the word and its definition to an excel file -> Review and try to quiz myself by hiding the definition column on excel -> Repeat
 
 As you can see, this process is tedious and hard to keep track of my progress. For example, if I want to take a quiz only on the incorrect words from last quiz, it's quite a manual process using Excel. 
 
@@ -58,7 +58,7 @@ Or you can build the project following these steps:
 ./my-words-app --help
 ```
 ## Tech stack
-Tha app is built with `Go`, `sqlite`, and these awesome cli frameworks / packages:
+The app is built with `Go`, `sqlite`, and these awesome cli frameworks / packages:
 - [cobra](https://github.com/spf13/cobra)
 - [promptui](https://github.com/manifoldco/promptui)
 - [go-pretty](https://github.com/jedib0t/go-pretty)
