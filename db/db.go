@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 )
 
 var db *sql.DB
@@ -20,7 +20,7 @@ func ConnectToDB() (*sql.DB, error) {
 			return nil, err
 		}
 	}
-	db, err = sql.Open("sqlite3", path)
+	db, err = sql.Open("sqlite", path)
 	if err != nil {
 		fmt.Println("connect to db error:", err)
 		return nil, err
