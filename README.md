@@ -1,6 +1,8 @@
 # My-Words-App
 I build this command-line app to better manage my English vocabulary study.
 
+Live Demo: https://www.youtube.com/watch?v=wJMVpKq_YYM&ab_channel=Chia-MingChang
+
 ### What is the problem you're solving?
 
 In the past, this was the process when I was trying to memorize vocabularies:
