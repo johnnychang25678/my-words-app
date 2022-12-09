@@ -1,8 +1,10 @@
 # My-Words-App
 I build this command-line app to better manage my English vocabulary study.
 
-Live Demo: 
-<iframe  title="YouTube video player" width="480" height="390" src="https://www.youtube.com/watch?v=wJMVpKq_YYM&ab_channel=Chia-MingChang" frameborder="0" allowfullscreen></iframe>
+Live Demo (Click on image to link to YouTube): 
+
+<a href="https://www.youtube.com/watch?v=wJMVpKq_YYM&ab_channel=Chia-MingChang"><img src="video_screenshot.png" width="560">
+</a>
 
 ### What is the problem you're solving?
 
