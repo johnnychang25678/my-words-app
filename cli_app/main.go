@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/johnnychang25678/my_words_app_2.0/db"
+	"github.com/johnnychang25678/my-words-app/db"
 
 	"github.com/johnnychang25678/my-words-app/cmd"
 	"github.com/johnnychang25678/my-words-app/repository"
